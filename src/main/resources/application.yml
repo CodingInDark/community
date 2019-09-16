@@ -1,2 +1,6 @@
-server:
-  port: 8081
+github:
+  client:
+    id: e0101a1b542cab3430d7
+    secret: 56cfaf8b28078b272381650f3f7be3931a531d53
+  redirect:
+    uri: http://localhost:8080/callback
