@@ -3,11 +3,15 @@ package life.community.xianren.controller;
 import life.community.xianren.dto.AccessTokenDTO;
 import life.community.xianren.dto.GithubUser;
 import life.community.xianren.provider.GithubProvider;
+import life.community.xianren.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 @Controller
 public class AuthorizeController {
@@ -22,8 +26,13 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirectUri;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/callback")
-    public String callback(@RequestParam(name = "code")String code,@RequestParam(name = "state")String state){
+    public String callback(@RequestParam(name = "code")String code,
+                           @RequestParam(name = "state")String state,
+                           HttpServletRequest request){
         AccessTokenDTO accessTokenDTO=new AccessTokenDTO();
         accessTokenDTO.setCode(code);
         accessTokenDTO.setRedirect_uri(redirectUri);
@@ -31,8 +40,14 @@ public class AuthorizeController {
         accessTokenDTO.setClient_id(clientId);
         accessTokenDTO.setClient_secret(clientSecret);
         String accessToken=githubProvider.getAccessToken(accessTokenDTO);
-        GithubUser user=githubProvider.getUser(accessToken);
-        System.out.println(user.getLogin()+"用户名："+user.getName()+" "+"介绍："+user.getBio());
-        return "index";
+        GithubUser githubUser=githubProvider.getUser(accessToken);
+        if (githubUser!=null){
+            userService.insert(githubUser.getName(),String.valueOf(githubUser.getId()),UUID.randomUUID().toString());
+            request.getSession().setAttribute("user",githubUser);
+            return "redirect:/";
+        }else {
+            return "redirect:/";
+        }
+        //System.out.println(user.getLogin()+"用户名："+user.getName()+" "+"介绍："+user.getBio());
     }
 }
