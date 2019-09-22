@@ -9,6 +9,15 @@ public class User {
     private String token;
     private Date gmtCreate;
     private Date gmtModified;
+    private String bio;
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
 
     public Integer getId() {
         return id;

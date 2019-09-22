@@ -9,15 +9,17 @@
             <arg column="token" jdbcType="CHAR" javaType="java.lang.String"/>
             <arg column="gmt_create" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
             <arg column="gmt_modified" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="bio" jdbcType="VARCHAR" javaType="java.lang.String"/>
         </constructor>
     </resultMap>
     <sql id="Base_Column_List">
-        id, account_id, name, token, gmt_create, gmt_modified
+        id, account_id, name, token, gmt_create, gmt_modified,bio
     </sql>
     <insert id="insert" parameterType="life.community.xianren.pojo.User">
-      insert into user (account_id,name,token,gmt_create,gmt_modified)
+      insert into user (account_id,name,token,gmt_create,gmt_modified,bio)
       values
-      (#{accountId},#{name},#{token},now(),now())
+      (#{accountId},#{name},#{token},now(),now(),#{bio})
     </insert>
+
 
 </mapper>
