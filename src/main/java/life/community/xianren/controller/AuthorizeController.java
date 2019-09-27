@@ -42,7 +42,7 @@ public class AuthorizeController {
         accessTokenDTO.setClient_secret(clientSecret);
         String accessToken=githubProvider.getAccessToken(accessTokenDTO);
         GithubUser githubUser=githubProvider.getUser(accessToken);
-        if (githubUser!=null){
+        if (githubUser!=null && githubUser.getId()!=null){
             String token=UUID.randomUUID().toString();
             userService.insert(githubUser.getName(),String.valueOf(githubUser.getId()),token,githubUser.getBio());
             //request.getSession().setAttribute("user",githubUser);
